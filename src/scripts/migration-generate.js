@@ -20,5 +20,5 @@ exec(command, (error, stdout, stderr) => {
     console.error(`Stderr: ${stderr}`)
     return
   }
-  console.log(`Stdout: ${stdout}`)
+  console.info(`Stdout: ${stdout}`)
 })
