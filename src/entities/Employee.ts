@@ -21,7 +21,7 @@ export class Employee {
   @Column()
   dni: number
 
-  @OneToOne(() => User)
+  @OneToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User
 }

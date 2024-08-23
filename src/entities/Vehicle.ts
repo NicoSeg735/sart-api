@@ -22,6 +22,6 @@ export class Vehicle {
   @Column()
   licensePlate: string
 
-  @ManyToOne(() => Client)
+  @ManyToOne(() => Client, { onDelete: 'CASCADE' })
   client: Client
 }

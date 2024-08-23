@@ -6,11 +6,12 @@
   "scripts": {
     "compile": "tsc",
     "build": "pnpm lint && pnpm compile",
-    "start": "pnpm migration:run && nodemon src/app.ts",
+    "start": "pnpm migration:run && nodemon --env-file=.env src/app.ts",
     "dev": "nodemon --env-file=.env src/app.ts",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "migration:generate": "node --env-file=.env src/scripts/migration-generate.js",
-    "migration:run": "pnpx typeorm-ts-node-esm migration:run -d ./src/db.ts"
+    "migration:run": "pnpx typeorm-ts-node-esm migration:run -d ./src/db.ts",
+    "migration:revert": "pnpx typeorm-ts-node-esm migration:revert -d ./src/db.ts"
   },
   "keywords": [],
   "author": "",

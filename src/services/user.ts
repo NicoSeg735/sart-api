@@ -23,4 +23,19 @@ export default class UserService {
       id,
     })
   }
+
+  async update(data: Partial<User>): Promise<User> {
+    const user = await this.userRepository.findOneBy({
+      id: data.id,
+    })
+
+    user.email = data.email
+    user.password = data.password
+
+    return await this.userRepository.save(user)
+  }
+
+  async delete(id: number): Promise<void> {
+    await this.userRepository.delete(id)
+  }
 }

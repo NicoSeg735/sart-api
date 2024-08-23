@@ -1,9 +1,9 @@
 import { Request, Response } from 'express'
 
-import UserService from '../services/user'
+import VehicleService from '../services/vehicle'
 
-export default class UserController {
-  private userService = new UserService()
+export default class VehicleController {
+  private vehicleService = new VehicleService()
 
   constructor() {
     this.create = this.create.bind(this)
@@ -14,9 +14,9 @@ export default class UserController {
 
   async create(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.userService.create(req.body)
+      const vehicle = await this.vehicleService.create(req.body)
 
-      return res.status(201).json(user)
+      return res.status(201).json(vehicle)
     } catch (error) {
       return res.status(400).json({ error: error.message })
     }
@@ -25,11 +25,14 @@ export default class UserController {
   async get(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.query
-      const user = await this.userService.get(Number(id))
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' })
+
+      const vehicle = await this.vehicleService.get(Number(id))
+
+      if (!vehicle) {
+        return res.status(404).json({ error: 'Vehicle not found' })
       }
-      return res.status(200).json(user)
+
+      return res.status(200).json(vehicle)
     } catch (error) {
       return res.status(400).json({ error: error.message })
     }
@@ -37,9 +40,9 @@ export default class UserController {
 
   async update(req: Request, res: Response): Promise<Response> {
     try {
-      const user = await this.userService.update(req.body)
+      const vehicle = await this.vehicleService.update(req.body)
 
-      return res.status(200).json(user)
+      return res.status(200).json(vehicle)
     } catch (error) {
       return res.status(400).json({ error: error.message })
     }
@@ -49,7 +52,7 @@ export default class UserController {
     try {
       const { id } = req.query
 
-      await this.userService.delete(Number(id))
+      await this.vehicleService.delete(Number(id))
       return res.status(204).send()
     } catch (error) {
       return res.status(400).json({ error: error.message })
