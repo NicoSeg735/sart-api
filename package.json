@@ -6,7 +6,7 @@
   "scripts": {
     "compile": "tsc",
     "build": "pnpm lint && pnpm compile",
-    "start": "pnpm migration:run && nodemon --env-file=.env src/app.ts",
+    "start": "pnpm migration:run && nodemon src/app.ts",
     "dev": "nodemon --env-file=.env src/app.ts",
     "lint": "eslint --fix \"src/**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "migration:generate": "node --env-file=.env src/scripts/migration-generate.js",
