@@ -1,12 +1,15 @@
 import 'reflect-metadata'
 
+import cors from 'cors'
 import express from 'express'
 
 import { AppDataSource } from './db'
 import routes from './routes'
 
 const app = express()
-const port = 4000
+const port = process.env.PORT || 4000
+
+app.use(cors())
 
 app.use(express.json())
 app.use('/api', routes)
