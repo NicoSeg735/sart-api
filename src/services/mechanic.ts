@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm'
 
 import { AppDataSource } from '../db'
+import { Appointment } from '../entities'
 import { Mechanic } from '../entities/Mechanic'
 import UserService from './user'
 
@@ -83,5 +84,20 @@ export default class MechanicService {
     await this.userService.delete(user.id)
 
     await this.mechanicRepository.delete(id)
+  }
+
+  async findAvailableMechanics(dateTime: Date): Promise<Mechanic[]> {
+    const availableMechanics = await this.mechanicRepository
+      .createQueryBuilder('mechanic')
+      .leftJoinAndSelect(
+        Appointment,
+        'appointment',
+        'mechanic.id = appointment.mechanicId AND appointment.date = :dateTime',
+        { dateTime }
+      )
+      .where('appointment.id IS NULL')
+      .getMany()
+
+    return availableMechanics
   }
 }

@@ -24,14 +24,19 @@ export default class AppointmentController {
 
   async get(req: Request, res: Response): Promise<Response> {
     try {
-      const { id } = req.query
-      const appointment = await this.appointmentService.get(Number(id))
+      const { id, status, startDate } = req.query
 
-      if (!appointment) {
-        return res.status(404).json({ error: 'Appointment not found' })
+      if (id) {
+        const appointment = await this.appointmentService.get(Number(id))
+
+        if (!appointment) {
+          return res.status(404).json({ error: 'Appointment not found' })
+        }
+        return res.status(200).json(appointment)
+      } else {
+        const appointments = await this.appointmentService.getList({ status, startDate })
+        return res.status(200).json(appointments)
       }
-
-      return res.status(200).json(appointment)
     } catch (error) {
       return res.status(400).json({ error: error.message })
     }

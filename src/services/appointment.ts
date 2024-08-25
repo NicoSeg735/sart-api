@@ -1,8 +1,9 @@
-import { Repository } from 'typeorm'
+import { MoreThanOrEqual, Repository } from 'typeorm'
 
 import { AppDataSource } from '../db'
+import { Mechanic } from '../entities'
 import { Appointment } from '../entities/Appointment'
-import EmployeeService from './employee'
+import MechanicService from './mechanic'
 import VehicleService from './vehicle'
 
 type AppointmentData = Omit<Appointment, 'id'> & {
@@ -13,12 +14,12 @@ type AppointmentData = Omit<Appointment, 'id'> & {
 export default class AppointmentService {
   private appointmentRepository: Repository<Appointment>
   private vehicleService: VehicleService
-  private employeeService: EmployeeService
+  private mechanicService: MechanicService
 
   constructor() {
     this.appointmentRepository = AppDataSource.getRepository(Appointment)
     this.vehicleService = new VehicleService()
-    this.employeeService = new EmployeeService()
+    this.mechanicService = new MechanicService()
   }
 
   async create(data: AppointmentData): Promise<Appointment> {
@@ -28,7 +29,11 @@ export default class AppointmentService {
       throw new Error('Vehicle not found')
     }
 
-    // const mechanic = await this.employeeService.get(data.mechanicId)
+    let mechanic: Mechanic
+
+    if (data.mechanicId) {
+      mechanic = await this.mechanicService.get(data.mechanicId)
+    }
 
     const appointment = new Appointment()
     appointment.date = data.date ?? new Date()
@@ -36,6 +41,7 @@ export default class AppointmentService {
     appointment.estimatedPrice = data.estimatedPrice
     appointment.status = data.status ?? false
     appointment.vehicle = vehicle
+    appointment.mechanic = mechanic
 
     return await this.appointmentRepository.save(appointment)
   }
@@ -52,11 +58,26 @@ export default class AppointmentService {
     })
 
     appointment.date = data.date
+    appointment.documentations = data.documentations
+    appointment.estimatedPrice = data.estimatedPrice
+    appointment.status = data.status
+    appointment.vehicle = data.vehicle
+    appointment.mechanic = data.mechanic
 
     return await this.appointmentRepository.save(appointment)
   }
 
   async delete(id: number): Promise<void> {
     await this.appointmentRepository.delete(id)
+  }
+
+  async getList(params?: Record<string, any>): Promise<Appointment[]> {
+    return await this.appointmentRepository.find({
+      where: {
+        date: MoreThanOrEqual(params.startDate),
+        status: params.status,
+      },
+      relations: ['vehicle'],
+    })
   }
 }

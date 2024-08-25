@@ -8,10 +8,10 @@ import vehicleRoutes from './vehicle'
 
 const router = Router()
 
-router.use('/user', userRoutes)
-router.use('/client', clientRoutes)
-router.use('/vehicle', vehicleRoutes)
-router.use('/appointment', appointmentRoutes)
-router.use('/mechanic', mechanicRoutes)
+router.use('/users', userRoutes)
+router.use('/clients', clientRoutes)
+router.use('/vehicles', vehicleRoutes)
+router.use('/appointments', appointmentRoutes)
+router.use('/mechanics', mechanicRoutes)
 
 export default router
