@@ -24,7 +24,7 @@ export default class AppointmentController {
 
   async get(req: Request, res: Response): Promise<Response> {
     try {
-      const { id, status, startDate } = req.query
+      const { id, status, startDate, mechanic } = req.query
 
       if (id) {
         const appointment = await this.appointmentService.get(Number(id))
@@ -34,7 +34,7 @@ export default class AppointmentController {
         }
         return res.status(200).json(appointment)
       } else {
-        const appointments = await this.appointmentService.getList({ status, startDate })
+        const appointments = await this.appointmentService.getList({ status, startDate, mechanic })
         return res.status(200).json(appointments)
       }
     } catch (error) {

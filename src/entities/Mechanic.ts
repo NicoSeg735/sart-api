@@ -6,5 +6,5 @@ import { Employee } from './Employee'
 @ChildEntity()
 export class Mechanic extends Employee {
   @OneToMany(() => Appointment, appointment => appointment.mechanic)
-  appointmentsAssigned: Appointment[]
+  appointments: Appointment[]
 }

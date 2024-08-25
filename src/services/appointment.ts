@@ -1,4 +1,4 @@
-import { MoreThanOrEqual, Repository } from 'typeorm'
+import { IsNull, MoreThanOrEqual, Repository } from 'typeorm'
 
 import { AppDataSource } from '../db'
 import { Mechanic } from '../entities'
@@ -72,12 +72,17 @@ export default class AppointmentService {
   }
 
   async getList(params?: Record<string, any>): Promise<Appointment[]> {
-    return await this.appointmentRepository.find({
+    const res = await this.appointmentRepository.find({
       where: {
         date: MoreThanOrEqual(params.startDate),
-        status: params.status,
+        status: false,
+        mechanic: params.mechanic === 'null' ? IsNull() : params.mechanic,
       },
-      relations: ['vehicle'],
+      relations: ['vehicle', 'mechanic'],
     })
+
+    console.log(res)
+
+    return res
   }
 }
