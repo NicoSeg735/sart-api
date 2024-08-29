@@ -73,7 +73,8 @@ export default class AppointmentService {
   }
 
   async getList(params?: Record<string, any>): Promise<Appointment[]> {
-    const { status, startDate, mechanic } = params
+    const { status, startDate, mechanic, dateTime } = params
+
     return await this.appointmentRepository.find({
       where: {
         ...(startDate && { date: MoreThanOrEqual(startDate) }),
@@ -83,6 +84,7 @@ export default class AppointmentService {
             ? { mechanic: IsNull() }
             : { mechanic }
           : {}),
+        ...(dateTime && { date: dateTime }),
       },
       relations: ['vehicle', 'mechanic'],
     })

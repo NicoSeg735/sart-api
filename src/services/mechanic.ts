@@ -85,11 +85,20 @@ export default class MechanicService {
     await this.mechanicRepository.delete(id)
   }
 
-  async findAvailableMechanics(dateTime: Date): Promise<Mechanic[]> {
+  async findAvailableMechanics(dateTime: string): Promise<Mechanic[]> {
     const availableMechanics = await this.mechanicRepository
       .createQueryBuilder('mechanic')
       .leftJoinAndSelect('mechanic.appointments', 'appointment')
-      .where('appointment.date != :dateTime OR appointment.date IS NULL', { dateTime })
+      .where(qb => {
+        const subQuery = qb
+          .subQuery()
+          .select('1')
+          .from('Appointment', 'appointment')
+          .where('appointment.mechanicId = mechanic.id')
+          .andWhere('appointment.date = :dateTime', { dateTime })
+          .getQuery()
+        return `NOT EXISTS (${subQuery})`
+      })
       .getMany()
 
     return availableMechanics

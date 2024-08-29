@@ -79,7 +79,7 @@ export default class MechanicController {
     }
 
     try {
-      const mechanics = await this.mechanicService.findAvailableMechanics(parsedDate)
+      const mechanics = await this.mechanicService.findAvailableMechanics(dateTime as string)
       return res.status(200).json(mechanics)
     } catch (error) {
       return res.status(500).json({ error: error.message })
