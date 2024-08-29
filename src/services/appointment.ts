@@ -47,8 +47,9 @@ export default class AppointmentService {
   }
 
   async get(id: number): Promise<Appointment> {
-    return this.appointmentRepository.findOneBy({
-      id,
+    return await this.appointmentRepository.findOne({
+      where: { id },
+      relations: ['vehicle', 'mechanic'],
     })
   }
 
@@ -72,11 +73,16 @@ export default class AppointmentService {
   }
 
   async getList(params?: Record<string, any>): Promise<Appointment[]> {
+    const { status, startDate, mechanic } = params
     return await this.appointmentRepository.find({
       where: {
-        date: MoreThanOrEqual(params.startDate),
-        status: false,
-        mechanic: params.mechanic === 'null' ? IsNull() : params.mechanic,
+        ...(startDate && { date: MoreThanOrEqual(startDate) }),
+        ...(status !== undefined ? { status } : {}),
+        ...(mechanic !== undefined
+          ? mechanic === 'null'
+            ? { mechanic: IsNull() }
+            : { mechanic }
+          : {}),
       },
       relations: ['vehicle', 'mechanic'],
     })
